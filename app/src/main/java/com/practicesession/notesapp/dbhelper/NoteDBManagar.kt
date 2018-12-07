@@ -9,57 +9,60 @@ import android.widget.Toast
 import es.dmoral.toasty.Toasty
 
 class NoteDBManagar {
-    private val dbName = "SKUNotes"
-    private val dbTable = "Notes"
-    private val colId = "Id"
-    private val colTitle = "Title"
-    private val colContent = "Content"
-    private val dbVersion = 1
 
-    private val CREATE_TABLE_COMMAND = "CREATE TABLE IF NOT EXISTS $dbTable ($colId INTEGER PRIMARY KEY, $colTitle TEXT, $colContent TEXT);"
+    val CREATE_TABLE_COMMAND =
+        "CREATE TABLE IF NOT EXISTS $dbTable ($colId INTEGER PRIMARY KEY, $colTitle TEXT, $colContent TEXT, $colFontStyle INTEGER);"
     private var db: SQLiteDatabase? = null
 
     constructor(context: Context) {
-        var dbHelper = DatabaseHelper(context)
+        val dbHelper = DatabaseHelper(context)
         db = dbHelper.writableDatabase
     }
 
     fun insert(values: ContentValues): Long {
-        val ID = db!!.insert(dbTable, "", values)
-        return ID
+        return db!!.insert(dbTable, "", values)
 
     }
 
     fun queryAll(): Cursor {
-        return db!!.rawQuery("select * from $dbTable", null)
+        return db!!.rawQuery("SELECT * FROM $dbTable", null)
     }
 
     fun delete(selection: String, selectionArgs: Array<String>): Int {
-        val count = db!!.delete(dbTable, selection, selectionArgs)
-        return count
+        return db!!.delete(dbTable, selection, selectionArgs)
     }
 
     fun update(values: ContentValues, selection: String, selectionArgs: Array<String>): Int {
-        val count = db!!.update(dbTable, values, selection, selectionArgs)
-        return count
+        return db!!.update(dbTable, values, selection, selectionArgs)
     }
 
 
     inner class DatabaseHelper : SQLiteOpenHelper {
+        var context: Context
+
         override fun onCreate(db: SQLiteDatabase?) {
             db!!.execSQL(CREATE_TABLE_COMMAND)
-            Toasty.success(this.context!!, "Database is created", Toast.LENGTH_LONG).show()
+            Toasty.success(this.context, "Database is created", Toast.LENGTH_LONG).show()
 
         }
 
         override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-            db!!.execSQL("Drop table IF EXISTS $dbTable")
+            db!!.execSQL("DROP TABLE IF EXISTS $dbTable")
+            onCreate(db)
         }
-
-        var context: Context? = null
 
         constructor(context: Context) : super(context, dbName, null, dbVersion) {
             this.context = context
         }
+    }
+
+    companion object {
+        const val dbName = "SKUNotes"
+        const val dbTable = "Notes"
+        const val colId = "Id"
+        const val colTitle = "Title"
+        const val colContent = "Content"
+        const val colFontStyle = "FontStyle"
+        const val dbVersion = 1
     }
 }

@@ -10,6 +10,7 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import com.practicesession.notesapp.constants.BundleKeys
 import com.practicesession.notesapp.R
 import com.practicesession.notesapp.dbhelper.NoteDBManagar
 import es.dmoral.toasty.Toasty
@@ -60,11 +61,12 @@ class NewNoteActivity : AppCompatActivity() {
         }
         val bundle = intent.extras
         if (bundle != null) {
-            id = bundle.getInt("MainActId", 0)
+            id = bundle.getInt(BundleKeys.bundleId, 0)
             try {
                 if (id != 0) {
-                    et_title.setText(bundle.getString("MainActTitle"))
-                    et_content.setText(bundle.getString("MainActContent"))
+                    et_title.setText(bundle.getString(BundleKeys.bundleTitle))
+                    et_content.setText(bundle.getString(BundleKeys.bundleContent))
+                    spinner.setSelection(bundle.getInt(BundleKeys.bundleFont,0))
 
                 }
             } catch (ex: Exception) {
@@ -80,6 +82,7 @@ class NewNoteActivity : AppCompatActivity() {
             } else {
                 values.put("Title", et_title.text.toString())
                 values.put("Content", et_content.text.toString())
+                values.put("FontStyle", spinner.selectedItemPosition)
 
                 if (id == 0) {
                     val mId = dbManager.insert(values)

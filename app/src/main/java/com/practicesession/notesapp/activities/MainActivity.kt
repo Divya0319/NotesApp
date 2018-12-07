@@ -11,11 +11,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import com.practicesession.notesapp.R
+import com.practicesession.notesapp.constants.BundleKeys
 import com.practicesession.notesapp.dbhelper.NoteDBManagar
 import com.practicesession.notesapp.model.Note
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.notes_item.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,10 +47,11 @@ class MainActivity : AppCompatActivity() {
         listNotes.clear()
         if (cursor.moveToFirst()) {
             do {
-                val id = cursor.getInt(cursor.getColumnIndex("Id"))
-                val title = cursor.getString(cursor.getColumnIndex("Title"))
-                val content = cursor.getString(cursor.getColumnIndex("Content"))
-                listNotes.add(Note(id, title, content))
+                val id = cursor.getInt(cursor.getColumnIndex(NoteDBManagar.colId))
+                val title = cursor.getString(cursor.getColumnIndex(NoteDBManagar.colTitle))
+                val content = cursor.getString(cursor.getColumnIndex(NoteDBManagar.colContent))
+                val fontStyle = cursor.getInt(cursor.getColumnIndex(NoteDBManagar.colFontStyle))
+                listNotes.add(Note(id, title, content, fontStyle))
 
             } while (cursor.moveToNext())
         }
@@ -78,7 +82,7 @@ class MainActivity : AppCompatActivity() {
             this.context = context
         }
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
             val view: View?
             val vh: ViewHolder
             if (convertView == null) {
@@ -94,6 +98,29 @@ class MainActivity : AppCompatActivity() {
 
             val mNote = notesList[position]
 
+            when (mNote.fontStyle) {
+                0 -> {
+                    val typeFace = ResourcesCompat.getFont(this@MainActivity, R.font.baumans)
+                    vh.tvTitle!!.typeface = typeFace
+                    vh.tvContent!!.typeface = typeFace
+                }
+                1 -> {
+                    val typeFace = ResourcesCompat.getFont(this@MainActivity, R.font.catamaran)
+                    vh.tvTitle!!.typeface = typeFace
+                    vh.tvContent!!.typeface = typeFace
+                }
+                2 -> {
+                    val typeFace = ResourcesCompat.getFont(this@MainActivity, R.font.droid_sans)
+                    vh.tvTitle!!.typeface = typeFace
+                    vh.tvContent!!.typeface = typeFace
+                }
+                3 -> {
+                    val typeFace = ResourcesCompat.getFont(this@MainActivity, R.font.hind_guntur)
+                    vh.tvTitle!!.typeface = typeFace
+                    vh.tvContent!!.typeface = typeFace
+                }
+            }
+
             vh.tvTitle!!.text = mNote.title
             vh.tvContent!!.text = mNote.content
 
@@ -108,15 +135,16 @@ class MainActivity : AppCompatActivity() {
                 loadQueryAll()
                 Toasty.success(this@MainActivity, "Deleted Successfully", Toast.LENGTH_LONG).show()
             }
-            return view!!
+            return view
         }
 
         private fun updateNote(note: Note) {
             val intent = Intent(context, NewNoteActivity::class.java)
             val bundle = Bundle()
-            bundle.putInt("MainActId", note.id!!)
-            bundle.putString("MainActTitle", note.title)
-            bundle.putString("MainActContent", note.content)
+            note.id?.let { bundle.putInt(BundleKeys.bundleId, it) }
+            bundle.putString(BundleKeys.bundleTitle, note.title)
+            bundle.putString(BundleKeys.bundleContent, note.content)
+            note.fontStyle?.let { bundle.putInt(BundleKeys.bundleFont, it) }
             intent.putExtras(bundle)
             startActivity(intent)
 

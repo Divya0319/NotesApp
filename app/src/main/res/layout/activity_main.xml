@@ -8,16 +8,17 @@
         android:layout_height="match_parent"
         tools:context=".activities.MainActivity">
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
-            android:id="@+id/lv_notes"
+            android:id="@+id/rv_notes"
             android:divider="@color/dark_yellow"
+            tools:listitem="@layout/notes_item"
             android:dividerHeight="2dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"/>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:src="@drawable/ic_add_black_24dp"
-            android:id="@+id/fab_add"
+            android:id="@+id/fab_add_note"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             app:fabSize="normal"

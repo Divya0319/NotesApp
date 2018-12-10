@@ -1,15 +1,13 @@
 package com.practicesession.notesapp.model
 
-class Note {
-    var id: Int? = null
-    var title: String? = null
-    var content: String? = null
-    var fontStyle: Int? = null
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-    constructor(id: Int, title: String, content: String, fontStyle: Int) {
-        this.id = id
-        this.title = title
-        this.content = content
-        this.fontStyle = fontStyle
-    }
+@Entity(tableName = "notes_table")
+data class Note(@ColumnInfo(name = "Content") var content: String, @ColumnInfo(name = "FontStyle") var fontStyle: Int) {
+
+    @PrimaryKey(autoGenerate = true)
+    var id: Int? = null
+
 }

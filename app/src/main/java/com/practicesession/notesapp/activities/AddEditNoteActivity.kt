@@ -11,16 +11,14 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import com.practicesession.notesapp.R
-import com.practicesession.notesapp.constants.BundleKeys
-import kotlinx.android.synthetic.main.activity_new_note.*
+import kotlinx.android.synthetic.main.activity_add_edit_note.*
 
-class NewNoteActivity : AppCompatActivity() {
-    var id = 0
+class AddEditNoteActivity : AppCompatActivity() {
     lateinit var spinner: Spinner
     private val fontOptions = arrayOf("Baumans", "Catamaran", "Droid Sans", "Hind Guntur")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_note)
+        setContentView(R.layout.activity_add_edit_note)
         spinner = findViewById(R.id.fontSelector)
 
         val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, fontOptions)
@@ -35,34 +33,32 @@ class NewNoteActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 when (position) {
                     0 -> {
-                        val typeface = ResourcesCompat.getFont(this@NewNoteActivity, R.font.baumans)
+                        val typeface = ResourcesCompat.getFont(this@AddEditNoteActivity, R.font.baumans)
                         et_content.typeface = typeface
                     }
                     1 -> {
-                        val typeface = ResourcesCompat.getFont(this@NewNoteActivity, R.font.catamaran)
+                        val typeface = ResourcesCompat.getFont(this@AddEditNoteActivity, R.font.catamaran)
                         et_content.typeface = typeface
                     }
                     2 -> {
-                        val typeface = ResourcesCompat.getFont(this@NewNoteActivity, R.font.droid_sans)
+                        val typeface = ResourcesCompat.getFont(this@AddEditNoteActivity, R.font.droid_sans)
                         et_content.typeface = typeface
                     }
                     3 -> {
-                        val typeface = ResourcesCompat.getFont(this@NewNoteActivity, R.font.hind_guntur)
+                        val typeface = ResourcesCompat.getFont(this@AddEditNoteActivity, R.font.hind_guntur)
                         et_content.typeface = typeface
                     }
                 }
             }
 
         }
-        val bundle = intent.extras
-        if (bundle != null) {
-            id = bundle.getInt(BundleKeys.bundleId, 0)
-
-            if (id != 0) {
-                et_content.setText(bundle.getString(BundleKeys.bundleContent))
-                spinner.setSelection(bundle.getInt(BundleKeys.bundleFont, 0))
-
-            }
+        val intent = intent
+        if (intent.hasExtra(EXTRA_ID)) {
+            title = "Edit Note"
+            et_content.setText(intent.getStringExtra(EXTRA_CONTENT))
+            spinner.setSelection(intent.getIntExtra(EXTRA_FONT_STYLE, 0))
+        } else {
+            title = "Add Note"
         }
 
         bt_save.setOnClickListener {
@@ -72,26 +68,28 @@ class NewNoteActivity : AppCompatActivity() {
     }
 
     private fun saveNote() {
-        val replyIntent = Intent()
-        if (id == 0) {
-            if (TextUtils.isEmpty(et_content.text)) {
-                et_content.error = "Title cannot be empty"
-                setResult(Activity.RESULT_CANCELED, replyIntent)
-            } else {
-                val content = et_content.text.toString()
-                replyIntent.putExtra(EXTRA_CONTENT, content)
-                replyIntent.putExtra(EXTRA_FONT_STYLE, spinner.selectedItemPosition)
-
-                setResult(Activity.RESULT_OK, replyIntent)
-                finish()
-            }
-        } else {
-
+        val content = et_content.text.toString()
+        val spinnerPosition = spinner.selectedItemPosition
+        if (TextUtils.isEmpty(et_content.text)) {
+            et_content.error = "Title cannot be empty"
+            return
         }
+        val replyIntent = Intent()
+        replyIntent.putExtra(EXTRA_CONTENT, content)
+        replyIntent.putExtra(EXTRA_FONT_STYLE, spinnerPosition)
+
+        val id = intent.getIntExtra(EXTRA_ID, -1)
+        if (id != -1) {
+            replyIntent.putExtra(EXTRA_ID, id)
+        }
+
+        setResult(Activity.RESULT_OK, replyIntent)
+        finish()
+
     }
 
     companion object {
-        const val EXTRA_ID = "com.practicesession.notesapp.activities.ID"
+        const val EXTRA_ID = "com.practicesession.notesapp.activities.EXTRA_ID"
         const val EXTRA_CONTENT = "com.practicesession.notesapp.activities.EXTRA_CONTENT"
         const val EXTRA_FONT_STYLE = "com.practicesession.notesapp.activities.EXTRA_FONT_STYLE"
     }

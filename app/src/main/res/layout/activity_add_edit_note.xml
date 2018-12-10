@@ -7,7 +7,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activities.NewNoteActivity">
+        tools:context=".activities.AddEditNoteActivity">
 
     <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -22,8 +22,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textMultiLine"
-                android:maxLength="2000"
-                android:layout_weight="1"
                 android:maxLines="10"
                 android:id="@+id/et_content"
                 android:hint="@string/start_typing_text"/>

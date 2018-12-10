@@ -19,7 +19,7 @@ import com.practicesession.notesapp.model.NotesViewModel
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity() {
     private var notesListAdapter: NotesListAdapter? = null
 
     private lateinit var mNotesViewModel: NotesViewModel
@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity(){
                 val note = Note(content, font_style)
 
                 mNotesViewModel.insert(note)
-                Toasty.success(this, "Note Saved", Toast.LENGTH_LONG).show()
+                Toasty.success(this, "Note Saved", Toast.LENGTH_SHORT).show()
             }
 
 
@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity(){
             }
 
         } else {
-            Toasty.error(this@MainActivity, "Note not saved", Toast.LENGTH_LONG).show()
+            Toasty.error(this@MainActivity, "Note not saved", Toast.LENGTH_SHORT).show()
         }
     }
 

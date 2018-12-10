@@ -21,7 +21,7 @@ class AddEditNoteActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_edit_note)
         spinner = findViewById(R.id.fontSelector)
 
-        val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, fontOptions)
+        val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, fontOptions)
         spinner.adapter = arrayAdapter
 
 
@@ -57,8 +57,11 @@ class AddEditNoteActivity : AppCompatActivity() {
             title = "Edit Note"
             et_content.setText(intent.getStringExtra(EXTRA_CONTENT))
             spinner.setSelection(intent.getIntExtra(EXTRA_FONT_STYLE, 0))
+            et_content.text?.length?.let { et_content.setSelection(it) }
         } else {
             title = "Add Note"
+            et_content.setText("            ")
+            et_content.setSelection(12)
         }
 
         bt_save.setOnClickListener {

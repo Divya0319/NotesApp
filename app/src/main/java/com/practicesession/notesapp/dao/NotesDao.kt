@@ -7,10 +7,10 @@ import com.practicesession.notesapp.model.Note
 @Dao
 interface NotesDao {
 
-    @Query("SELECT * FROM notes_table ORDER BY id DESC")
+    @Query("SELECT * FROM notes_table")
     fun getAllNotes(): LiveData<List<Note>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(note: Note)
 
     @Delete

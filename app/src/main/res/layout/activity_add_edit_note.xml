@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:weightSum="10"
         android:orientation="vertical"
@@ -9,24 +8,16 @@
         android:layout_height="match_parent"
         tools:context=".activities.AddEditNoteActivity">
 
-    <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/title_text_input"
-            app:hintTextAppearance="@style/TextLabel"
-            android:layout_weight="8">
 
-        <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="textMultiLine"
-                android:maxLines="10"
-                android:gravity="top|start"
-                android:id="@+id/et_content"
-                android:hint="@string/start_typing_text"/>
-    </com.google.android.material.textfield.TextInputLayout>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:layout_weight="8"
+            android:maxLines="10"
+            android:gravity="top|start"
+            android:id="@+id/et_content"
+            android:hint="@string/start_typing_text"/>
 
     <Spinner
             android:id="@+id/fontSelector"

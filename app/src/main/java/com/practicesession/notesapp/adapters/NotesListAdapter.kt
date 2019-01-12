@@ -6,16 +6,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.practicesession.notesapp.R
 import com.practicesession.notesapp.model.Note
 
 class NotesListAdapter(context: Context) :
-    RecyclerView.Adapter<NotesListAdapter.NoteHolder>() {
+    ListAdapter<Note, NotesListAdapter.NoteHolder>(DIFF_CALLBACK) {
     var context: Context? = null
     var listener: OnItemClickListener? = null
 
-    private var notes: List<Note> = ArrayList()
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Note>() {
+            override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
+                return oldItem.content.equals(newItem.content) && oldItem.fontStyle.equals(newItem.fontStyle)
+            }
+
+        }
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -28,7 +42,7 @@ class NotesListAdapter(context: Context) :
     }
 
     override fun onBindViewHolder(holder: NoteHolder, position: Int) {
-        val currentNote = notes[position]
+        val currentNote = getItem(position)
         holder.tvContent.text = currentNote.content
 
         when (currentNote.fontStyle) {
@@ -52,16 +66,10 @@ class NotesListAdapter(context: Context) :
 
     }
 
-    fun setNotes(notes: List<Note>) {
-        this.notes = notes
-        notifyDataSetChanged()
-    }
 
     fun getNoteAt(position: Int): Note {
-        return notes[position]
+        return getItem(position)
     }
-
-    override fun getItemCount() = notes.size
 
     inner class NoteHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -72,7 +80,7 @@ class NotesListAdapter(context: Context) :
             view.setOnClickListener {
                 val position = adapterPosition
                 if (listener != null && position != RecyclerView.NO_POSITION) {
-                    listener?.onItemClick(notes[position])
+                    listener?.onItemClick(getItem(position))
                 }
             }
         }

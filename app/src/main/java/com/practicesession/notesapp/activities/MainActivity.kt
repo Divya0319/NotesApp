@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         mNotesViewModel.getAllNotes().observe(this, Observer { notes ->
             notes.let {
-                notesListAdapter?.setNotes(it)
+                notesListAdapter?.submitList(it)
 
                 val swipeToDeleteCallback = object :
                     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {

@@ -14,9 +14,9 @@ Here are some screenshots of its working:
 ![Enter note](https://github.com/Divya0319/NotesApp/blob/master/screenshots/4.jpg)
 
 
-### Saved font example 1
+### Saved notes example 1
 ![Font Example](https://github.com/Divya0319/NotesApp/blob/master/screenshots/2.jpg)
 
 
-### Saved font example 2
+### Saved notes example 2
 ![Font Example](https://github.com/Divya0319/NotesApp/blob/master/screenshots/3.jpg)

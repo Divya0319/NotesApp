@@ -7,7 +7,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.5.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -27,8 +27,7 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 ext {
-    roomVersion = '1.1.1'
-    archLifecycleVersion = '1.1.1'
-    coroutines = '0.26.1'
+    roomVersion = '2.2.5'
+    archLifecycleVersion = '2.2.0'
 
 }

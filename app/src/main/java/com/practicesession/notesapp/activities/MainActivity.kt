@@ -6,26 +6,30 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practicesession.notesapp.R
 import com.practicesession.notesapp.adapters.NotesListAdapter
+import com.practicesession.notesapp.databinding.ActivityMainBinding
 import com.practicesession.notesapp.model.Note
 import com.practicesession.notesapp.model.NotesViewModel
 import es.dmoral.toasty.Toasty
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private var notesListAdapter: NotesListAdapter? = null
 
     private lateinit var mNotesViewModel: NotesViewModel
+    private lateinit var mBinding : ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        mBinding = ActivityMainBinding.inflate(layoutInflater)
+        val view = mBinding.root
+        setContentView(view)
 
         val recyclerView: RecyclerView = findViewById(R.id.rv_notes)
         notesListAdapter = NotesListAdapter(this)
@@ -34,10 +38,10 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = notesListAdapter
 
         val itemDecoration = DividerItemDecoration(applicationContext, DividerItemDecoration.VERTICAL)
-        itemDecoration.setDrawable(resources.getDrawable(R.drawable.divider_rec_view))
+        itemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.divider_rec_view)!!)
         recyclerView.addItemDecoration(itemDecoration)
 
-        mNotesViewModel = ViewModelProviders.of(this).get(NotesViewModel::class.java)
+        mNotesViewModel = ViewModelProvider(this).get(NotesViewModel::class.java)
 
         mNotesViewModel.getAllNotes().observe(this, Observer { notes ->
             notes.let {
@@ -73,16 +77,16 @@ class MainActivity : AppCompatActivity() {
 
                 if (it.isEmpty()) {
                     recyclerView.visibility = View.GONE
-                    empty_note_view.visibility = View.VISIBLE
+                    mBinding.emptyNoteView.visibility = View.VISIBLE
                 } else {
                     recyclerView.visibility = View.VISIBLE
-                    empty_note_view.visibility = View.GONE
+                    mBinding.emptyNoteView.visibility = View.GONE
                 }
             }
         })
 
 
-        fab_add_note.setOnClickListener {
+        mBinding.fabAddNote.setOnClickListener {
             val intent = Intent(this@MainActivity, AddEditNoteActivity::class.java)
             startActivityForResult(intent, ADD_NOTE_REQUEST)
         }
@@ -94,11 +98,11 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == ADD_NOTE_REQUEST && resultCode == Activity.RESULT_OK) {
             data?.let {
                 val content = it.getStringExtra(AddEditNoteActivity.EXTRA_CONTENT)
-                val font_style = it.getIntExtra(AddEditNoteActivity.EXTRA_FONT_STYLE, 0)
+                val fontStyle = it.getIntExtra(AddEditNoteActivity.EXTRA_FONT_STYLE, 0)
 
-                val note = Note(content, font_style)
+                val note = content?.let { it1 -> Note(it1, fontStyle) }
 
-                mNotesViewModel.insert(note)
+                mNotesViewModel.insert(note!!)
                 Toasty.success(this, "Note Saved", Toast.LENGTH_SHORT).show()
             }
 
@@ -111,10 +115,10 @@ class MainActivity : AppCompatActivity() {
             } else {
                 data?.let {
                     val content = it.getStringExtra(AddEditNoteActivity.EXTRA_CONTENT)
-                    val font_style = it.getIntExtra(AddEditNoteActivity.EXTRA_FONT_STYLE, 0)
-                    val note = Note(content, font_style)
-                    note.id = id
-                    mNotesViewModel.update(note)
+                    val fontStyle = it.getIntExtra(AddEditNoteActivity.EXTRA_FONT_STYLE, 0)
+                    val note = content?.let { it1 -> Note(it1, fontStyle) }
+                    note?.id = id
+                    mNotesViewModel.update(note!!)
 
                     Toasty.success(this@MainActivity, "Note Updated", Toast.LENGTH_SHORT).show()
                 }

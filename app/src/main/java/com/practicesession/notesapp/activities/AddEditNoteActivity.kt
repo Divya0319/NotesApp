@@ -1,6 +1,5 @@
 package com.practicesession.notesapp.activities
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -11,14 +10,17 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import com.practicesession.notesapp.R
-import kotlinx.android.synthetic.main.activity_add_edit_note.*
+import com.practicesession.notesapp.databinding.ActivityAddEditNoteBinding
 
 class AddEditNoteActivity : AppCompatActivity() {
     lateinit var spinner: Spinner
+    lateinit var binding: ActivityAddEditNoteBinding
     private val fontOptions = arrayOf("Baumans", "Catamaran", "Droid Sans", "Hind Guntur")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_edit_note)
+        binding = ActivityAddEditNoteBinding.inflate(layoutInflater);
+        val view = binding.root;
+        setContentView(view)
         spinner = findViewById(R.id.fontSelector)
 
         val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, fontOptions)
@@ -34,19 +36,19 @@ class AddEditNoteActivity : AppCompatActivity() {
                 when (position) {
                     0 -> {
                         val typeface = ResourcesCompat.getFont(this@AddEditNoteActivity, R.font.baumans)
-                        et_content.typeface = typeface
+                        binding.etContent.typeface = typeface
                     }
                     1 -> {
                         val typeface = ResourcesCompat.getFont(this@AddEditNoteActivity, R.font.catamaran)
-                        et_content.typeface = typeface
+                        binding.etContent.typeface = typeface
                     }
                     2 -> {
                         val typeface = ResourcesCompat.getFont(this@AddEditNoteActivity, R.font.droid_sans)
-                        et_content.typeface = typeface
+                        binding.etContent.typeface = typeface
                     }
                     3 -> {
                         val typeface = ResourcesCompat.getFont(this@AddEditNoteActivity, R.font.hind_guntur)
-                        et_content.typeface = typeface
+                        binding.etContent.typeface = typeface
                     }
                 }
             }
@@ -55,26 +57,26 @@ class AddEditNoteActivity : AppCompatActivity() {
         val intent = intent
         if (intent.hasExtra(EXTRA_ID)) {
             title = "Edit Note"
-            et_content.setText(intent.getStringExtra(EXTRA_CONTENT))
+            binding.etContent.setText(intent.getStringExtra(EXTRA_CONTENT))
             spinner.setSelection(intent.getIntExtra(EXTRA_FONT_STYLE, 0))
-            et_content.text?.length?.let { et_content.setSelection(it) }
+            binding.etContent.text?.length?.let { binding.etContent.setSelection(it) }
         } else {
             title = "Add Note"
-            et_content.setText("            ")
-            et_content.setSelection(12)
+            binding.etContent.setText("            ")
+            binding.etContent.setSelection(12)
         }
 
-        bt_save.setOnClickListener {
+        binding.btSave.setOnClickListener {
             saveNote()
         }
 
     }
 
     private fun saveNote() {
-        val content = et_content.text.toString()
+        val content = binding.etContent.text.toString()
         val spinnerPosition = spinner.selectedItemPosition
-        if (TextUtils.isEmpty(et_content.text)) {
-            et_content.error = "Title cannot be empty"
+        if (TextUtils.isEmpty(binding.etContent.text)) {
+            binding.etContent.error = "Title cannot be empty"
             return
         }
         val replyIntent = Intent()
@@ -86,7 +88,7 @@ class AddEditNoteActivity : AppCompatActivity() {
             replyIntent.putExtra(EXTRA_ID, id)
         }
 
-        setResult(Activity.RESULT_OK, replyIntent)
+        setResult(RESULT_OK, replyIntent)
         finish()
 
     }

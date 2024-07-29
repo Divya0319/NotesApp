@@ -19,3 +19,14 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keepclassmembers class com.fastturtle.limenotes.model.** { *; }
+-keepclassmembers class com.fastturtle.limenotes.repos.** { *; }
+-keepclassmembers class com.fastturtle.limenotes.dao.** { *; }
+-keepclassmembers class com.fastturtle.limenotes.helpers.NotesDatabase
+
+-keepnames class es.dmoral.toasty.** { *; }
+-keepnames class androidx.room.** { *; }
+-keepnames class androidx.lifecycle.** { *; }
+
+-keepattributes *Annotation*, Signature, Exception
+

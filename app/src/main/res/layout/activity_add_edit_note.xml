@@ -11,8 +11,9 @@
     <EditText
             android:id="@+id/et_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="8"
+            android:importantForAutofill="no"
             android:gravity="top|start"
             android:hint="@string/start_typing_text"
             android:inputType="textMultiLine"
@@ -22,6 +23,7 @@
             android:id="@+id/fontSelector"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:contentDescription="@string/select_font_from_here"
             android:layout_marginTop="16dp"
             android:layout_weight="1" />
 
